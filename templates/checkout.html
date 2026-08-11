@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-center my-4">
+    <div class="col-md-9">
+        <div class="card card-custom p-4 shadow-sm">
+            <h3 class="fw-bold mb-4" style="color: #1b5e20;">
+                <i class="fa-solid fa-truck-fast me-2"></i>Delivery Details & Checkout
+            </h3>
+
+            {% if cart_items %}
+                <form id="checkoutForm" method="POST" action="{% url 'process_payment' %}">
+                    {% csrf_token %}
+                    
+                    <!-- Customer & Shipping Address Form -->
+                    <div class="row g-3 mb-4">
+                        <h5 class="fw-bold mb-1" style="color: #1b5e20;">1. Shipping Information</h5>
+                        
+                        <div class="col-md-6">
+                            <label class="fw-bold small text-muted">Full Name</label>
+                            <input type="text" id="fullNameInput" name="full_name" class="form-control" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="fw-bold small text-muted">Phone Number</label>
+                            <input type="tel" id="phoneInput" name="phone" class="form-control" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="fw-bold small text-muted">Street / Line Address</label>
+                            <input type="text" name="address" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="fw-bold small text-muted">City</label>
+                            <input type="text" name="city" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="fw-bold small text-muted">State</label>
+                            <input type="text" name="state" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="fw-bold small text-muted">Pincode</label>
+                            <input type="text" name="pincode" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary Table -->
+                    <h5 class="fw-bold mb-2" style="color: #1b5e20;">2. Order Summary</h5>
+                    <div class="table-responsive mb-3">
+                        <table class="table align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart_items %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ item.product.image_url }}" style="width: 45px; height: 45px; object-fit: contain;" class="me-2 rounded" alt="">
+                                            <span class="fw-bold" style="color: #1b5e20;">{{ item.product.name }}</span>
+                                        </div>
+                                    </td>
+                                    <td>₹{{ item.product.price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td class="fw-bold">₹{% widthratio item.product.price 1 item.quantity %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center p-3 rounded mb-4" style="background-color: #c8e6c9;">
+                        <h5 class="fw-bold m-0" style="color: #1b5e20;">Total Amount:</h5>
+                        <h3 class="fw-bold m-0" style="color: #2e7d32;">₹{{ total_amount }}</h3>
+                    </div>
+
+                    <!-- Payment Mode Selection -->
+                    <h5 class="fw-bold mb-3" style="color: #1b5e20;">3. Payment Method</h5>
+                    
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="payment_mode" id="cod" value="COD" checked>
+                        <label class="form-check-label fw-bold" for="cod">
+                            <i class="fa-solid fa-truck text-success me-2"></i>Cash on Delivery (COD)
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="radio" name="payment_mode" id="razorpay" value="ONLINE">
+                        <label class="form-check-label fw-bold" for="razorpay">
+                            <i class="fa-solid fa-credit-card text-primary me-2"></i>Online Payment (Razorpay / UPI / Cards)
+                        </label>
+                    </div>
+
+                    <button type="button" onclick="handleCheckoutSubmission()" class="btn btn-red w-100 py-3 fs-5 fw-bold">
+                        Proceed to Pay ₹{{ total_amount }}
+                    </button>
+                </form>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-cart-arrow-down text-muted display-1 mb-3"></i>
+                    <h4 class="fw-bold" style="color: #1b5e20;">Your Cart is Empty!</h4>
+                    <a href="{% url 'home' %}" class="btn btn-red px-4 py-2 mt-2">Explore Products</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Simulated Razorpay Modal -->
+<div class="modal fade" id="razorpayModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content overflow-hidden border-0 shadow-lg" style="border-radius: 12px;">
+            <div class="row g-0">
+                <!-- Left Razorpay Sidebar -->
+                <div class="col-md-5 p-4 text-white d-flex flex-column justify-content-between" style="background: linear-gradient(180deg, #103822 0%, #0d2c1b 100%);">
+                    <div>
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="rounded-circle bg-dark d-flex align-items-center justify-content-center me-2 text-white fw-bold" style="width: 32px; height: 32px;">K</div>
+                            <span class="fw-bold fs-5">KAVYNEST</span>
+                        </div>
+
+                        <div class="bg-white bg-opacity-10 p-3 rounded mb-3">
+                            <small class="text-white-50 d-block">Price Summary</small>
+                            <span class="fs-2 fw-bold">₹{{ total_amount }}</span>
+                        </div>
+
+                        <div class="bg-white bg-opacity-10 p-2 rounded d-flex align-items-center">
+                            <i class="fa-solid fa-user me-2 text-white-50"></i>
+                            <span id="rzpUserPhone" class="small text-truncate">Using phone</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-top border-secondary">
+                        <small class="text-white-50">Secured by <strong class="text-white">Razorpay</strong></small>
+                    </div>
+                </div>
+
+                <!-- Right Payment Options / Forms Section -->
+                <div class="col-md-7 p-4 bg-light position-relative">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    
+                    <h5 class="fw-bold mb-3 text-dark" id="rzpHeaderTitle">Payment Options</h5>
+
+                    <!-- Step 1: Card Details Input Form -->
+                    <div id="rzpStep1">
+                        <div class="card mb-2 border-0 shadow-sm">
+                            <div class="card-body p-3">
+                                <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-credit-card text-success me-2"></i>Cards (Credit / Debit)</h6>
+                                
+                                <div class="mt-3">
+                                    <div class="mb-2">
+                                        <label class="small fw-bold text-muted">Card Number</label>
+                                        <input type="text" id="cardNumber" class="form-control form-control-sm" placeholder="4111 2222 3333 4444" maxlength="19">
+                                    </div>
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6">
+                                            <label class="small fw-bold text-muted">Expiry (MM/YY)</label>
+                                            <input type="text" id="cardExpiry" class="form-control form-control-sm" placeholder="12/28" maxlength="5">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="small fw-bold text-muted">CVV</label>
+                                            <input type="password" id="cardCvv" class="form-control form-control-sm" placeholder="123" maxlength="3">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-success w-100 fw-bold" onclick="proceedToOtp()">Pay ₹{{ total_amount }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: OTP Entry Form -->
+                    <div id="rzpStep2" style="display: none;">
+                        <p class="small text-muted mb-3">An authentication OTP has been sent to your registered mobile number.</p>
+                        
+                        <div class="mb-3">
+                            <label class="fw-bold small text-dark mb-1">Enter OTP</label>
+                            <input type="password" id="otpInput" class="form-control" placeholder="Enter OTP" maxlength="4">
+                            <div id="otpError" class="text-danger small mt-1" style="display:none;">Incorrect OTP. Please try again.</div>
+                        </div>
+
+                        <button type="button" class="btn btn-success w-100 py-2 fw-bold" onclick="verifyOtpAndSubmit()">Confirm & Pay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function handleCheckoutSubmission() {
+    var form = document.getElementById('checkoutForm');
+    
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    var isOnline = document.getElementById('razorpay').checked;
+    
+    if (isOnline) {
+        var phone = document.getElementById('phoneInput').value;
+        document.getElementById('rzpUserPhone').innerText = "Using as " + (phone || "customer");
+        
+        var modal = new bootstrap.Modal(document.getElementById('razorpayModal'));
+        modal.show();
+    } else {
+        form.submit();
+    }
+}
+
+function proceedToOtp() {
+    var num = document.getElementById('cardNumber').value;
+    var exp = document.getElementById('cardExpiry').value;
+    var cvv = document.getElementById('cardCvv').value;
+
+    if (!num || !exp || !cvv) {
+        alert("Please complete card details.");
+        return;
+    }
+
+    document.getElementById('rzpHeaderTitle').innerText = "Bank Verification (OTP)";
+    document.getElementById('rzpStep1').style.display = "none";
+    document.getElementById('rzpStep2').style.display = "block";
+}
+
+function verifyOtpAndSubmit() {
+    var otp = document.getElementById('otpInput').value;
+    
+    if (otp === "1234") {
+        document.getElementById('otpError').style.display = "none";
+        document.getElementById('checkoutForm').submit();
+    } else {
+        document.getElementById('otpError').style.display = "block";
+    }
+}
+</script>
+
+{% endblock %}

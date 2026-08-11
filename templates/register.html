@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-5">
+        <div class="card card-custom p-4 shadow-sm" style="background: #ffffff; border-radius: 12px;">
+            <h3 class="text-center fw-bold mb-4" style="color: #1b5e20;">Create Account</h3>
+            
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                <div class="mb-2">
+                    <label class="fw-bold" style="color: #1b5e20;">Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="fw-bold" style="color: #1b5e20;">Password</label>
+                    <div class="position-relative">
+                        <input type="password" id="regPass" name="password" class="form-control pe-5" placeholder="Enter password" required>
+                        <i class="fa-solid fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-secondary" 
+                           id="toggleRegPass" 
+                           style="cursor: pointer;" 
+                           onclick="toggleSinglePassword('regPass', 'toggleRegPass')"></i>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <label class="fw-bold" style="color: #1b5e20;">Confirm Password</label>
+                    <div class="position-relative">
+                        <input type="password" id="regConfPass" name="confirm_password" class="form-control pe-5" placeholder="Confirm password" required>
+                        <i class="fa-solid fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-secondary" 
+                           id="toggleRegConfPass" 
+                           style="cursor: pointer;" 
+                           onclick="toggleSinglePassword('regConfPass', 'toggleRegConfPass')"></i>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <label class="fw-bold" style="color: #1b5e20;">Security Question</label>
+                    <select name="question" class="form-select" required>
+                        <option value="" disabled selected hidden>-- Select a Security Question --</option>
+                        <option value="What is your pet's name?">What is your pet's name?</option>
+                        <option value="What is your favorite book?">What is your favorite book?</option>
+                        <option value="What city were you born in?">What city were you born in?</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="fw-bold" style="color: #1b5e20;">Security Answer</label>
+                    <input type="text" name="answer" class="form-control" placeholder="Enter answer" required>
+                </div>
+
+                <button type="submit" class="btn btn-red w-100 py-2">Register</button>
+            </form>
+
+            <div class="text-center mt-3 pt-2 border-top">
+                <p class="mb-0" style="color: #1b5e20;">Already have an account? <a href="{% url 'login' %}" class="fw-bold text-decoration-none" style="color: #2e7d32;">Login</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleSinglePassword(inputId, iconId) {
+    var input = document.getElementById(inputId);
+    var icon = document.getElementById(iconId);
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center align-items-center my-5">
+    <div class="col-md-5">
+        <div class="card card-custom p-4 shadow-sm" style="background: #ffffff; border-radius: 12px;">
+            <h3 class="text-center fw-bold mb-4" style="color: #1b5e20;">Login</h3>
+            
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="fw-bold mb-1" style="color: #1b5e20;">Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="fw-bold mb-1" style="color: #1b5e20;">Password</label>
+                    <div class="position-relative">
+                        <input type="password" id="loginPass" name="password" class="form-control pe-5" placeholder="Enter password" required>
+                        <i class="fa-solid fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-secondary" 
+                           id="toggleLoginPass" 
+                           style="cursor: pointer;" 
+                           onclick="toggleSinglePassword('loginPass', 'toggleLoginPass')"></i>
+                    </div>
+                </div>
+
+                <div class="text-end mb-3">
+                    <a href="{% url 'forgot_password' %}" class="text-decoration-none fw-bold" style="color: #d32f2f;">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-red w-100 py-2 fs-5 mb-3">Login</button>
+            </form>
+
+            <div class="text-center pt-2 border-top">
+                <p class="mb-0" style="color: #1b5e20;">Don't have an account? <a href="{% url 'register' %}" class="fw-bold text-decoration-none" style="color: #2e7d32;">Register</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleSinglePassword(inputId, iconId) {
+    var input = document.getElementById(inputId);
+    var icon = document.getElementById(iconId);
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+</script>
+{% endblock %}

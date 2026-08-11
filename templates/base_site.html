@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+
+{% block extrastyle %}
+<style>
+    :root {
+        --primary-bg: #1b4332;
+        --secondary-bg: #2d6a4f;
+        --accent-green: #52b788;
+    }
+    body {
+        background-color: #0d1b1e !important;
+        color: #ffffff !important;
+    }
+    #header {
+        background: var(--primary-bg) !important;
+        border-bottom: 3px solid var(--accent-green);
+    }
+    #header a, td, th { color: #ffffff !important; }
+    div.module { background: var(--secondary-bg) !important; }
+    table tbody tr { background-color: #214f3b !important; }
+    input, select {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        font-weight: 600;
+    }
+    .button, input[type=submit] {
+        background: var(--accent-green) !important;
+        color: #000000 !important;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}

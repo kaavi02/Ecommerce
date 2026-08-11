@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-center my-4">
+    <div class="col-md-10">
+        <!-- Main Welcome Banner -->
+        <div class="card card-custom p-5 shadow-sm mb-4 text-center">
+            <h1 class="fw-bold mb-3" style="color: #1b5e20;">
+                <i class="fa-solid fa-store me-2 text-success"></i>About KavyNest
+            </h1>
+            <p class="lead fw-bold text-dark mx-auto" style="max-width: 750px;">
+                Welcome to <strong>KavyNest</strong> — your premium online shopping destination for ethnic wear, trendy footwear, sparkling jewellery, daily beauty essentials, and tech accessories!
+            </p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+            <div class="col">
+                <div class="card card-custom p-4 h-100 text-center">
+                    <div class="fs-1 text-success mb-2">🛍️</div>
+                    <h5 class="fw-bold" style="color: #1b5e20;">Budget Friendly</h5>
+                    <p class="fw-bold text-dark small">We ensure top quality collections across all categories at the best market prices.</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card card-custom p-4 h-100 text-center">
+                    <div class="fs-1 text-success mb-2">🚚</div>
+                    <h5 class="fw-bold" style="color: #1b5e20;">Fast Shipping</h5>
+                    <p class="fw-bold text-dark small">Quick processing and doorstep delivery within 3 to 5 business days right across India.</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card card-custom p-4 h-100 text-center">
+                    <div class="fs-1 text-success mb-2">🔒</div>
+                    <h5 class="fw-bold" style="color: #1b5e20;">Secure Checkout</h5>
+                    <p class="fw-bold text-dark small">Pay safely via Cash on Delivery (COD) or instant Razorpay payment modes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Our Mission Section -->
+        <div class="card card-custom p-4 shadow-sm mb-4">
+            <h4 class="fw-bold mb-3" style="color: #1b5e20;">Our Mission</h4>
+            <p class="fw-bold text-dark">
+                At KavyNest, our goal is to bring modern style, convenience, and affordability into every household. Whether you're looking for elegant cotton sarees, long-lasting makeup, ethnic footwear, or smart gadgets, we carefully curate each product to give you the best value for money.
+            </p>
+            <div class="pt-2">
+                <a href="{% url 'home' %}" class="btn btn-red px-4 py-2">Start Shopping Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

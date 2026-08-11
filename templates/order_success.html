@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row justify-content-center my-5">
+    <div class="col-md-7">
+        <div class="card card-custom p-4 p-md-5 shadow-sm text-center">
+            
+            <!-- Success Icon -->
+            <div class="mb-3">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success text-white" style="width: 70px; height: 70px;">
+                    <i class="fa-solid fa-check fs-1"></i>
+                </div>
+            </div>
+
+            <!-- Dynamic Heading: "Order Placed Successfully!" for COD, "Payment Successful!" for Online -->
+            <h2 class="fw-bold mb-2" style="color: #1b5e20;">
+                {% if mode == 'ONLINE' %}
+                    Payment Successful!
+                {% else %}
+                    Order Placed Successfully!
+                {% endif %}
+            </h2>
+
+            <p class="fw-bold text-dark mb-4">
+                Thank you, <strong>{{ full_name }}</strong>, for shopping with <strong>KAVY STORE</strong>. Your order has been placed successfully.
+            </p>
+
+            <!-- Order Summary Details Table -->
+            <div class="border rounded p-3 text-start bg-light mb-4">
+                <div class="row py-2 border-bottom">
+                    <div class="col-6 fw-bold text-dark">Order Status</div>
+                    <div class="col-6 text-end fw-bold text-success">Confirmed</div>
+                </div>
+
+                <div class="row py-2 border-bottom">
+                    <div class="col-6 fw-bold text-dark">Payment Status</div>
+                    <div class="col-6 text-end fw-bold text-dark">
+                        {% if mode == 'ONLINE' %}Paid{% else %}Pending (COD){% endif %}
+                    </div>
+                </div>
+
+                <div class="row py-2 border-bottom">
+                    <div class="col-6 fw-bold text-dark">Paid by</div>
+                    <div class="col-6 text-end fw-bold text-dark">{{ full_name }}</div>
+                </div>
+
+                <div class="row py-2 border-bottom">
+                    <div class="col-5 fw-bold text-dark">Product(s)</div>
+                    <div class="col-7 text-end fw-bold text-dark">{{ product_names }}</div>
+                </div>
+
+                <div class="row py-2 border-bottom">
+                    <div class="col-6 fw-bold text-dark">Total Paid</div>
+                    <div class="col-6 text-end fw-bold fs-5 text-success">₹{{ total_amount }}</div>
+                </div>
+
+                <div class="row py-2">
+                    <div class="col-6 fw-bold text-dark">Delivery</div>
+                    <div class="col-6 text-end fw-bold text-dark">{{ delivery_time }}</div>
+                </div>
+            </div>
+
+            <div>
+                <a href="{% url 'home' %}" class="btn btn-red px-4 py-2 fs-5 fw-bold">Continue Shopping</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %} 
