@@ -5,13 +5,17 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kavynest-secret-key-change-this-in-production'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-kavynest-secret-key-change-this-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', '.vercel.app', '127.0.0.1', 'localhost']
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.vercel.app',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -28,6 +32,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # WhiteNoise serves static files in production (must be right after SecurityMiddleware)
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,17 +64,27 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kavynest.wsgi.application'
 
 # Database
-# Default SQLite configuration (easiest for quick setup)
+# Uses Aiven MySQL in production via environment variables
+# Falls back to local defaults for development
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME','xfdlckph_kavynest'),
-        'USER':os.environ.get('DB_USER','xfdlckph_kavynest'),
-        'PASSWORD':os.environ.get('DB_PASSWORD','H8rSwvWbNGAPCxKEnSwL'),
-        'HOST':os.environ.get('DB_HOST','69.164.250.130'),
-        'PORT':os.environ.get('DB_PORT','3306'),
+        'NAME': os.environ.get('DB_NAME', 'xfdlckph_kavynest'),
+        'USER': os.environ.get('DB_USER', 'xfdlckph_kavynest'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'H8rSwvWbNGAPCxKEnSwL'),
+        'HOST': os.environ.get('DB_HOST', '69.164.250.130'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
     }
 }
+
+# Aiven requires SSL connections by default
+if os.environ.get('DB_SSL', 'false').lower() == 'true':
+    DATABASES['default']['OPTIONS']['ssl'] = {
+        'ssl_disabled': False,
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -95,6 +111,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'store' / 'static', ]
+
+# Directory where collectstatic gathers all static files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles_build' / 'static'
+
+# WhiteNoise configuration for efficient static file serving
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Login / Logout Redirects
 LOGIN_URL = 'login'
