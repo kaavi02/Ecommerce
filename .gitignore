@@ -9,7 +9,6 @@ build/
 
 # Django
 db.sqlite3
-staticfiles_build/
 *.log
 
 # Virtual environment
