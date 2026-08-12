@@ -10,7 +10,7 @@ A modern, responsive e-commerce web platform built with Python & Django. **KavyN
 * **Product Catalog & Dynamic Search:** Home page grid with real-time keyword search and category filters.
 * **Shopping Cart Subsystem:** Dynamic item additions, quantity adjustments, and live subtotal calculations.
 * **Wishlist Tracking:** Bookmark favorite items for quick access and future purchases.
-* **Checkout & Order Processing:** Collects shipping details, supports COD and simulated online payment, and generates instant order summaries.
+* **Checkout & Order Processing:** Collects shipping details, supports-COD and simulated online payment, and generates instant order summaries.
 * **Admin Control Panel:** Fully functional Django `/admin/` suite for CRUD operations on products, categories, and customer orders.
 
 ---
