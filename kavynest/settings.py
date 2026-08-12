@@ -10,6 +10,7 @@ SECRET_KEY = 'django-insecure-kavynest-secret-key-change-this-in-production'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -61,11 +62,11 @@ WSGI_APPLICATION = 'kavynest.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kavynest',
-        'USER':'root',
-        'PASSWORD':'0221',
-        'HOST':'127.0.0.1',
-        'PORT':'3306',
+        'NAME': os.environ.get('DB_NAME','xfdlckph_kavynest'),
+        'USER':os.environ.get('DB_USER','xfdlckph_kavynest'),
+        'PASSWORD':os.environ.get('DB_PASSWORD','H8rSwvWbNGAPCxKEnSwL'),
+        'HOST':os.environ.get('DB_HOST','69.164.250.130'),
+        'PORT':os.environ.get('DB_PORT','3306'),
     }
 }
 
