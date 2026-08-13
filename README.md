@@ -1,5 +1,5 @@
 # KavyNest – Django E-Commerce Website
-
+<!-- Deployed on Vercel with Aiven MySQL -->
 A modern, responsive e-commerce web platform built with Python & Django. **KavyNest** caters to multi-category online retail, featuring traditional ethnic wear (such as Kasavu sarees and Kurtha sets), jewellery, footwear, and beauty essentials.
 
 ---
