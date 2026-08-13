@@ -8,6 +8,9 @@ from store import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    
+    # Keep-alive endpoint (pinged by cron to prevent Aiven auto-shutdown)
+    path('keep-alive/', views.keep_alive, name='keep_alive'),
   
     path('about/', views.about, name='about'),
     

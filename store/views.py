@@ -4,7 +4,23 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.http import JsonResponse
+from django.db import connection
 from .models import Product, CartItem, WishlistItem, Order, UserProfile
+
+# ================================
+# KEEP-ALIVE ENDPOINT
+# ================================
+
+def keep_alive(request):
+    """Pings the database to prevent Aiven free-tier auto-shutdown.
+    Called every 30 minutes by Vercel Cron or external cron service."""
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        return JsonResponse({"status": "ok", "db": "connected"})
+    except Exception as e:
+        return JsonResponse({"status": "error", "db": str(e)}, status=500)
 
 def seed_sample_products():
     """Populates default products with verified, high-availability image URLs."""

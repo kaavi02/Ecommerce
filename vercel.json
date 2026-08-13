@@ -14,5 +14,11 @@
       "src": "/(.*)",
       "dest": "kavynest/wsgi.py"
     }
+  ],
+  "crons": [
+    {
+      "path": "/keep-alive/",
+      "schedule": "*/30 * * * *"
+    }
   ]
 }
